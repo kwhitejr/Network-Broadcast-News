@@ -10,18 +10,25 @@ var rl = readline.createInterface({
 var username = '';
 socket.setEncoding('utf8');
 
+var invalidUsernames = ['[ADMIN]', 'ADMIN'];
 
 getUsername();
 
 // STEP 1
 function getUsername () {
   rl.question('Enter a username: ', function (answer) {
-    console.log('Thank you, ', answer);
-    username += answer;
-    rl.close();
-    // Readline is weird. Avoid it.
-    process.stdin.resume();
-    connectToServer();
+    if (invalidUsernames.indexOf(answer) > -1) {
+      console.log('Invalid username... try again...');
+      getUsername();
+    // Need 'else' statement to prevent fuckery on unwinding.
+    } else {
+      console.log('Thank you, ', answer);
+      username += answer;
+      rl.close();
+      // Readline is weird. Avoid it.
+      process.stdin.resume();
+      connectToServer();
+    }
   });
 }
 
